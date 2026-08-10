@@ -1,5 +1,24 @@
 [
   {
+    "name": "M1911/TTI",
+    "brand": "LKCJ",
+    "type": "Gel Blaster",
+    "link": "https://theluckylk.com/collections/gel-blaster/products/new-manual-m1911-gel-blaster?_fid=92ab67dbb&_pos=7&_ss=c&ref=kweculeh&variant=42740130021472",
+    "linkType": "other",
+    "fps": "75+",
+    "ammoCap": "~50",
+    "ammoType": "Gel Balls",
+    "price": "39.98",
+    "description": "Magazine fed\nRemovable accessories\nMode:Manual\nWeight:700g\nLength:17cm\nMaterial:Almost all alloy",
+    "images": [
+      "img/0c67d231-591e-4584-9efa-ea16cc37e602.jpg",
+      "img/9a28d420-d7d3-4f4c-ba83-36af963db3cd.jpg",
+      "img/4c54ead1-5ee4-41a2-a89d-224b4f75ec87.jpg"
+    ],
+    "id": "45ddec29-e300-4708-b6ed-0a1b4cbf67ef",
+    "createdAt": "2026-08-10T22:42:23.180Z"
+  },
+  {
     "name": "F1   Blaze   2.0",
     "brand": "LKCJ",
     "type": "Gel Blaster",
