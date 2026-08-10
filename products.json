@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "name": "DD   M4-PDW",
+    "brand": "LKCJ",
+    "type": "Gel Blaster",
+    "link": "https://theluckylk.com/collections/gel-blaster/products/dd-m4-pdw-gel-blaster-high-speed-fire-mode-flagship?_fid=20945b379&_pos=3&_ss=c&ref=kweculeh",
+    "linkType": "other",
+    "fps": "150+",
+    "ammoCap": "~100",
+    "ammoType": "Gel Balls",
+    "price": "125.98",
+    "description": "Features:\n\nMagazine fed\nRemovable accessories\nSEMI/Full Auto\nFiring Range: 30 - 45 Meters\nRPS:45-48(11.1V)\nWeight:1.5 kg\nLength:70 cm",
+    "images": [
+      "img/99a4d8f3-d1ea-401d-9665-229e4b79c74d.jpg",
+      "img/e5e1f512-f6f0-482c-a84e-6a4cf79b4639.jpg",
+      "img/c78c2704-c5ed-4190-aa2f-19ea874b0878.jpg",
+      "img/05cf6802-cd9d-4432-b4a5-d727a8095806.jpg"
+    ],
+    "id": "cfec9152-e368-4c03-8aa0-2ac7ab3ed209",
+    "createdAt": "2026-08-10T22:28:17.175Z"
+  }
+]
