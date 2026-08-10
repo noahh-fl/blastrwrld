@@ -1,5 +1,26 @@
 [
   {
+    "name": "Fast   Mode   Pistol",
+    "brand": "LKCJ",
+    "type": "Gel Blaster",
+    "link": "https://theluckylk.com/collections/gel-blaster/products/new-fast-mode-pistol-gel-blaster?_fid=20945b379&_pos=9&_ss=c&ref=kweculeh&variant=42740127924320",
+    "linkType": "other",
+    "fps": "75+",
+    "ammoCap": "~100",
+    "ammoType": "Gel Balls",
+    "price": "55.98",
+    "description": "Features:\n\nMagazine fed\nRemovable accessories\nManual/Auto Fast mode",
+    "images": [
+      "img/ea73997a-62ba-40ce-bede-9fcc6072d67f.jpg",
+      "img/fc9c0874-8763-4306-bfff-ce97f80476d4.jpg",
+      "img/59f91de9-4729-4dec-b612-1a991ac36d15.jpg",
+      "img/b8e086ad-196b-455b-bbe1-e06fb18b91d9.jpg",
+      "img/cf08ea4a-1542-418b-99e7-59108ffefe8e.jpg"
+    ],
+    "id": "68ecc064-9193-47ec-a278-34905b6115cd",
+    "createdAt": "2026-08-10T22:34:26.165Z"
+  },
+  {
     "name": "DD   M4-PDW",
     "brand": "LKCJ",
     "type": "Gel Blaster",
