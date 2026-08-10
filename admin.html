@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlastrWrld — Command</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0C0E;--panel:#101216;--panel-2:#14161B;--line:#1E2127;--line-strong:#2A2E36;
+    --text:#E8EAED;--sub:#C6CAD1;--dim:#8B909A;--faint:#5A5F68;
+    --accent:#FF5A1F;--accent-soft:rgba(255,90,31,.14);--blue:#3B82F6;
+    --ok:#22C55E;--err:#EF4444;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;--sans:'Inter',system-ui,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased;min-height:100vh}
+  button{font-family:inherit;cursor:pointer}
+  a{color:inherit;text-decoration:none}
+
+  .gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .gate-box{width:100%;max-width:400px;border:1px solid var(--line-strong);border-radius:10px;background:var(--panel);padding:34px 30px}
+  .gate-box h1{font-size:16px;font-weight:700;letter-spacing:.02em}
+  .gate-kicker{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+  .gate-box p{color:var(--dim);font-size:13px;margin-top:8px;line-height:1.55}
+  .gate-box p a{color:var(--sub);border-bottom:1px solid var(--line-strong)}
+
+  input,select,textarea{
+    width:100%;background:var(--panel-2);border:1px solid var(--line-strong);border-radius:6px;
+    color:var(--text);padding:11px 12px;font-size:14px;font-family:inherit;outline:none;
+    transition:border-color .15s;
+  }
+  input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+  textarea{resize:vertical;min-height:90px;line-height:1.55}
+  select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238B909A'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    border:0;border-radius:6px;background:var(--accent);color:#0B0C0E;
+    font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+    padding:12px 18px;transition:filter .15s,transform .1s;
+  }
+  .btn:hover{filter:brightness(1.1)}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:transparent;border:1px solid var(--line-strong);color:var(--sub)}
+  .btn.ghost:hover{border-color:var(--accent);color:#fff;filter:none}
+  .btn.full{width:100%}
+  .btn:disabled{opacity:.5;cursor:default;filter:none}
+
+  .gate-box form{margin-top:20px;display:flex;flex-direction:column;gap:12px}
+  .gate-err{color:var(--err);font-family:var(--mono);font-size:11px;letter-spacing:.08em;display:none}
+
+  .panel{display:none;max-width:1060px;margin:0 auto;padding:34px 20px 80px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:30px;flex-wrap:wrap}
+  .topbar h1{font-size:17px;font-weight:700;margin-top:6px}
+  .topbar .k{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent)}
+  .topbar-actions{display:flex;gap:8px}
+  .topbar-actions .btn{padding:9px 14px;font-size:10.5px}
+
+  .cols{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:34px;align-items:start}
+  @media (max-width:900px){.cols{grid-template-columns:1fr}}
+
+  .card{border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:24px}
+  .card h2{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:18px}
+
+  .field{margin-bottom:14px}
+  .field label{
+    display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--faint);margin-bottom:6px;
+  }
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .hint{font-size:11px;color:var(--faint);margin-top:5px;line-height:1.4}
+
+  .imgdrop{
+    border:1px dashed var(--line-strong);border-radius:6px;padding:18px;text-align:center;
+    color:var(--faint);font-family:var(--mono);font-size:11px;letter-spacing:.1em;cursor:pointer;
+    transition:border-color .15s,color .15s;
+  }
+  .imgdrop:hover,.imgdrop.drag{border-color:var(--accent);color:var(--sub)}
+  .previews{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .pv{position:relative;width:64px;height:64px;border:1px solid var(--line-strong);border-radius:5px;overflow:hidden}
+  .pv img{width:100%;height:100%;object-fit:cover}
+  .pv button{
+    position:absolute;top:2px;right:2px;width:18px;height:18px;border:0;border-radius:4px;
+    background:rgba(0,0,0,.75);color:#fff;font-size:10px;line-height:1;
+  }
+  .pv .up{position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:#fff}
+
+  .msg{font-family:var(--mono);font-size:11px;letter-spacing:.08em;margin-top:12px;display:none}
+  .msg.ok{color:var(--ok)}.msg.err{color:var(--err)}
+
+  .plist{display:flex;flex-direction:column;gap:10px}
+  .pitem{
+    display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:8px;
+    background:var(--panel);padding:10px 14px 10px 10px;
+  }
+  .pitem .pthumb{width:52px;height:52px;border-radius:5px;overflow:hidden;background:var(--panel-2);border:1px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center}
+  .pitem .pthumb img{width:100%;height:100%;object-fit:cover}
+  .pitem .pthumb span{font-family:var(--mono);font-size:8px;color:var(--faint)}
+  .pitem .pmeta{flex:1;min-width:0}
+  .pitem .pname{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pitem .psub{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:3px}
+  .pitem .pacts{display:flex;gap:6px}
+  .pitem .pacts button{
+    border:1px solid var(--line-strong);background:transparent;color:var(--dim);
+    border-radius:5px;padding:7px 11px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    transition:border-color .15s,color .15s;
+  }
+  .pitem .pacts button:hover{border-color:var(--accent);color:#fff}
+  .pitem .pacts button.danger:hover{border-color:var(--err);color:var(--err)}
+  .empty{color:var(--faint);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;text-align:center;padding:36px 0;border:1px dashed var(--line);border-radius:8px}
+  .livenote{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--faint);text-transform:uppercase;margin-top:14px;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gate-box">
+    <div class="gate-kicker">BlastrWrld // Command</div>
+    <h1>Owner Access</h1>
+    <p>Paste your access key to manage the arsenal. It's saved on this device until you hit Lock.</p>
+    <form id="loginForm">
+      <input type="password" id="pw" placeholder="Access key (github_pat_…)" autocomplete="off" autofocus>
+      <div class="gate-err" id="gateErr">ACCESS DENIED — KEY INVALID</div>
+      <button class="btn full" type="submit">Enter</button>
+    </form>
+  </div>
+</div>
+
+<div class="panel" id="panel">
+  <div class="topbar">
+    <div>
+      <div class="k">BlastrWrld // Command</div>
+      <h1>Arsenal Manager</h1>
+    </div>
+    <div class="topbar-actions">
+      <a href="index.html" target="_blank"><button class="btn ghost" type="button">View Site ↗</button></a>
+      <button class="btn ghost" type="button" id="logout">Lock</button>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div class="card">
+      <h2 id="formTitle">Add Product</h2>
+      <form id="pForm">
+        <div class="field">
+          <label>Product Name *</label>
+          <input id="fName" placeholder="e.g. Nerf Elite 2.0 Motoblitz" required>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Brand</label>
+            <input id="fBrand" placeholder="e.g. Nerf">
+          </div>
+          <div class="field">
+            <label>Product Type</label>
+            <select id="fType">
+              <option value="">— select —</option>
+              <option>Dart Blaster</option>
+              <option>Gel Blaster</option>
+              <option>Foam Blaster</option>
+              <option>Water Blaster</option>
+              <option>Ammo / Refill</option>
+              <option>Gear / Accessory</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Affiliate Link *</label>
+          <input id="fLink" type="url" placeholder="https://…" required>
+        </div>
+        <div class="field">
+          <label>Link Type</label>
+          <select id="fLinkType">
+            <option value="amazon">Amazon affiliate</option>
+            <option value="brand">Brand program (Gel Blaster, etc.)</option>
+            <option value="other">Other</option>
+          </select>
+          <div class="hint">Changes the button text shoppers see ("View on Amazon" vs "Buy from brand").</div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>FPS</label>
+            <input id="fFps" placeholder="e.g. 150">
+          </div>
+          <div class="field">
+            <label>Ammo Capacity</label>
+            <input id="fAmmo" placeholder="e.g. 10-dart clip">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Ammo Type</label>
+            <input id="fAmmoType" placeholder="e.g. Elite darts / gel beads">
+          </div>
+          <div class="field">
+            <label>Price (optional)</label>
+            <input id="fPrice" placeholder="e.g. $29.99">
+          </div>
+        </div>
+        <div class="field">
+          <label>Description</label>
+          <textarea id="fDesc" placeholder="What you thought of it, who it's for, standout features…"></textarea>
+        </div>
+        <div class="field">
+          <label>Images</label>
+          <div class="imgdrop" id="drop">CLICK OR DROP IMAGES HERE</div>
+          <input type="file" id="fFiles" accept="image/*" multiple style="display:none">
+          <div class="previews" id="previews"></div>
+          <div class="hint">First image becomes the grid thumbnail. Images are auto-compressed.</div>
+        </div>
+        <button class="btn full" type="submit" id="saveBtn">Publish Product</button>
+        <button class="btn ghost full" type="button" id="cancelEdit" style="display:none;margin-top:8px">Cancel Edit</button>
+        <div class="msg" id="formMsg"></div>
+      </form>
+    </div>
+
+    <div>
+      <div class="card" style="padding:24px 24px 20px">
+        <h2>Live Arsenal</h2>
+        <div class="plist" id="plist">
+          <div class="empty">Loading…</div>
+        </div>
+        <div class="livenote">Changes go live on the site in about a minute</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var REPO = 'blastrwrld';
+  var BRANCH = 'main';
+  var OWNER = localStorage.getItem('bw_gh_owner') || '';
+  var TOKEN = localStorage.getItem('bw_gh_token') || '';
+
+  function API(){
+    return 'https://api.github.com/repos/' + OWNER + '/' + REPO + '/contents/';
+  }
+  var products = [];
+  var productsSha = null;
+  var editingId = null;
+  var pendingImages = []; // {ref, previewUrl, uploading}
+
+  var $ = function(id){ return document.getElementById(id); };
+
+  function gh(path, opts){
+    opts = opts || {};
+    opts.headers = Object.assign({
+      'Authorization': 'Bearer ' + TOKEN,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    }, opts.headers);
+    if(opts.json){
+      opts.body = JSON.stringify(opts.json);
+      delete opts.json;
+    }
+    return fetch(path, opts).then(function(r){
+      if(r.status === 401 || r.status === 403){ throw new Error('auth'); }
+      return r.json().then(function(data){ return { status: r.status, data: data }; });
+    });
+  }
+
+  function b64EncodeUnicode(str){
+    return btoa(unescape(encodeURIComponent(str)));
+  }
+  function b64DecodeUnicode(str){
+    return decodeURIComponent(escape(atob(str)));
+  }
+  function blobToBase64(blob){
+    return new Promise(function(resolve){
+      var fr = new FileReader();
+      fr.onload = function(){ resolve(String(fr.result).split(',')[1]); };
+      fr.readAsDataURL(blob);
+    });
+  }
+  function uuid(){
+    return (crypto.randomUUID) ? crypto.randomUUID() :
+      'xxxx-4xxx'.replace(/x/g, function(){ return (Math.random()*16|0).toString(16); }) + '-' + Date.now();
+  }
+
+  /* ---------- auth ---------- */
+  function lock(){
+    localStorage.removeItem('bw_gh_token');
+    localStorage.removeItem('bw_gh_owner');
+    TOKEN = ''; OWNER = '';
+    $('panel').style.display = 'none';
+    $('gate').style.display = 'flex';
+  }
+  function unlock(){
+    $('gate').style.display = 'none';
+    $('panel').style.display = 'block';
+    loadProducts();
+  }
+
+  function validate(t){
+    return fetch('https://api.github.com/user', {
+      headers: { 'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json' }
+    }).then(function(r){
+      if(!r.ok) throw new Error('bad token');
+      return r.json();
+    }).then(function(u){
+      return fetch('https://api.github.com/repos/' + u.login + '/' + REPO, {
+        headers: { 'Authorization': 'Bearer ' + t, 'Accept': 'application/vnd.github+json' }
+      }).then(function(r2){
+        if(!r2.ok) throw new Error('no repo');
+        return u.login;
+      });
+    });
+  }
+
+  $('loginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var t = $('pw').value.trim();
+    validate(t).then(function(login){
+      TOKEN = t; OWNER = login;
+      localStorage.setItem('bw_gh_token', t);
+      localStorage.setItem('bw_gh_owner', login);
+      $('gateErr').style.display = 'none';
+      $('pw').value = '';
+      unlock();
+    }).catch(function(){ $('gateErr').style.display = 'block'; });
+  });
+
+  $('logout').addEventListener('click', lock);
+
+  /* ---------- data ---------- */
+  function loadProducts(){
+    gh(API() +'products.json?ref=' + BRANCH + '&t=' + Date.now(), {cache:'no-store'})
+      .then(function(res){
+        if(res.status === 200){
+          productsSha = res.data.sha;
+          try { products = JSON.parse(b64DecodeUnicode(res.data.content.replace(/\n/g,''))); }
+          catch(e){ products = []; }
+          if(!Array.isArray(products)) products = [];
+        } else {
+          products = []; productsSha = null;
+        }
+        renderList();
+      })
+      .catch(function(err){
+        if(err.message === 'auth'){ lock(); return; }
+        $('plist').innerHTML = '<div class="empty">Could not load — refresh</div>';
+      });
+  }
+
+  function saveProducts(message){
+    return gh(API() +'products.json', {
+      method: 'PUT',
+      json: {
+        message: message,
+        content: b64EncodeUnicode(JSON.stringify(products, null, 2)),
+        sha: productsSha || undefined,
+        branch: BRANCH
+      }
+    }).then(function(res){
+      if(res.status !== 200 && res.status !== 201){
+        if(res.status === 409){
+          return loadProducts().then ? null : null;
+        }
+        throw new Error('save failed');
+      }
+      productsSha = res.data.content.sha;
+    });
+  }
+
+  /* ---------- product list ---------- */
+  function renderList(){
+    var el = $('plist');
+    el.innerHTML = '';
+    if(!products.length){
+      el.innerHTML = '<div class="empty">No products yet — publish your first one</div>';
+      return;
+    }
+    products.forEach(function(p){
+      var d = document.createElement('div');
+      d.className = 'pitem';
+      var cover = p.images && p.images.length ? '<img src="'+p.images[0]+'" alt="">' : '<span>NO IMG</span>';
+      d.innerHTML =
+        '<div class="pthumb">'+cover+'</div>'+
+        '<div class="pmeta"><div class="pname"></div><div class="psub">'+(p.type||'—')+(p.fps?' · '+p.fps+' FPS':'')+'</div></div>'+
+        '<div class="pacts"><button type="button" class="edit">Edit</button><button type="button" class="danger del">Del</button></div>';
+      d.querySelector('.pname').textContent = p.name;
+      d.querySelector('.edit').addEventListener('click', function(){ startEdit(p); });
+      d.querySelector('.del').addEventListener('click', function(){
+        if(confirm('Remove "'+p.name+'" from the site?')){
+          products = products.filter(function(x){ return x.id !== p.id; });
+          renderList();
+          saveProducts('Remove product: ' + p.name)
+            .then(function(){ showMsg('Removed — live in ~1 min', 'ok'); })
+            .catch(function(){ showMsg('Remove failed — refresh and retry', 'err'); loadProducts(); });
+        }
+      });
+      el.appendChild(d);
+    });
+  }
+
+  /* ---------- images ---------- */
+  var drop = $('drop'), fileInput = $('fFiles');
+  drop.addEventListener('click', function(){ fileInput.click(); });
+  drop.addEventListener('dragover', function(e){ e.preventDefault(); drop.classList.add('drag'); });
+  drop.addEventListener('dragleave', function(){ drop.classList.remove('drag'); });
+  drop.addEventListener('drop', function(e){
+    e.preventDefault(); drop.classList.remove('drag');
+    handleFiles(e.dataTransfer.files);
+  });
+  fileInput.addEventListener('change', function(){ handleFiles(fileInput.files); fileInput.value=''; });
+
+  function handleFiles(files){
+    Array.prototype.forEach.call(files, function(f){
+      if(!f.type.startsWith('image/')) return;
+      compress(f).then(function(blob){
+        var slot = { ref:null, previewUrl:URL.createObjectURL(blob), uploading:true };
+        pendingImages.push(slot);
+        renderPreviews();
+        blobToBase64(blob).then(function(b64){
+          var path = 'img/' + uuid() + '.jpg';
+          gh(API() +path, {
+            method:'PUT',
+            json: { message: 'Upload image', content: b64, branch: BRANCH }
+          }).then(function(res){
+            if(res.status === 201 || res.status === 200){
+              slot.ref = path; slot.uploading = false;
+            } else {
+              pendingImages = pendingImages.filter(function(s){return s!==slot;});
+              showMsg('Image upload failed','err');
+            }
+            renderPreviews();
+          }).catch(function(err){
+            pendingImages = pendingImages.filter(function(s){return s!==slot;});
+            renderPreviews();
+            if(err.message === 'auth'){ lock(); return; }
+            showMsg('Image upload failed','err');
+          });
+        });
+      });
+    });
+  }
+
+  function compress(file){
+    return new Promise(function(resolve){
+      var img = new Image();
+      img.onload = function(){
+        var max = 1400;
+        var w = img.width, h = img.height;
+        if(w > max || h > max){
+          var k = Math.min(max/w, max/h);
+          w = Math.round(w*k); h = Math.round(h*k);
+        }
+        var c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        c.toBlob(function(b){ resolve(b || file); }, 'image/jpeg', 0.86);
+      };
+      img.onerror = function(){ resolve(file); };
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+  function renderPreviews(){
+    var el = $('previews');
+    el.innerHTML = '';
+    pendingImages.forEach(function(s, i){
+      var d = document.createElement('div');
+      d.className = 'pv';
+      d.innerHTML = '<img src="'+(s.previewUrl || s.ref)+'">' +
+        (s.uploading ? '<div class="up">UP…</div>' : '') +
+        '<button type="button">✕</button>';
+      d.querySelector('button').addEventListener('click', function(){
+        pendingImages.splice(i,1); renderPreviews();
+      });
+      el.appendChild(d);
+    });
+  }
+
+  /* ---------- form ---------- */
+  function showMsg(text, cls){
+    var m = $('formMsg');
+    m.textContent = text;
+    m.className = 'msg ' + cls;
+    m.style.display = 'block';
+    setTimeout(function(){ m.style.display='none'; }, 5000);
+  }
+
+  function resetForm(){
+    $('pForm').reset();
+    pendingImages = [];
+    editingId = null;
+    renderPreviews();
+    $('formTitle').textContent = 'Add Product';
+    $('saveBtn').textContent = 'Publish Product';
+    $('cancelEdit').style.display = 'none';
+  }
+
+  function startEdit(p){
+    editingId = p.id;
+    $('fName').value = p.name || '';
+    $('fBrand').value = p.brand || '';
+    $('fType').value = p.type || '';
+    $('fLink').value = p.link || '';
+    $('fLinkType').value = p.linkType || 'amazon';
+    $('fFps').value = p.fps || '';
+    $('fAmmo').value = p.ammoCap || '';
+    $('fAmmoType').value = p.ammoType || '';
+    $('fPrice').value = p.price || '';
+    $('fDesc').value = p.description || '';
+    pendingImages = (p.images || []).map(function(ref){ return {ref:ref, previewUrl:null, uploading:false}; });
+    renderPreviews();
+    $('formTitle').textContent = 'Edit Product';
+    $('saveBtn').textContent = 'Save Changes';
+    $('cancelEdit').style.display = 'block';
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  $('cancelEdit').addEventListener('click', resetForm);
+
+  $('pForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    if(pendingImages.some(function(s){return s.uploading;})){
+      showMsg('Wait — images still uploading', 'err');
+      return;
+    }
+    var payload = {
+      name: $('fName').value.trim(),
+      brand: $('fBrand').value.trim(),
+      type: $('fType').value,
+      link: $('fLink').value.trim(),
+      linkType: $('fLinkType').value,
+      fps: $('fFps').value.trim(),
+      ammoCap: $('fAmmo').value.trim(),
+      ammoType: $('fAmmoType').value.trim(),
+      price: $('fPrice').value.trim(),
+      description: $('fDesc').value.trim(),
+      images: pendingImages.map(function(s){ return s.ref; }).filter(Boolean)
+    };
+    if(!payload.name || !payload.link){ showMsg('Name and affiliate link are required','err'); return; }
+    $('saveBtn').disabled = true;
+
+    var msg;
+    if(editingId){
+      var i = -1;
+      products.forEach(function(p, idx){ if(p.id === editingId) i = idx; });
+      if(i > -1){ products[i] = Object.assign({}, products[i], payload, {id: editingId}); }
+      msg = 'Update product: ' + payload.name;
+    } else {
+      payload.id = uuid();
+      payload.createdAt = new Date().toISOString();
+      products.unshift(payload);
+      msg = 'Add product: ' + payload.name;
+    }
+
+    saveProducts(msg).then(function(){
+      $('saveBtn').disabled = false;
+      showMsg(editingId ? 'Saved — live in ~1 min' : 'Published — live in ~1 min', 'ok');
+      resetForm();
+      renderList();
+    }).catch(function(err){
+      $('saveBtn').disabled = false;
+      if(err.message === 'auth'){ lock(); return; }
+      showMsg('Save failed — refresh and retry', 'err');
+      loadProducts();
+    });
+  });
+
+  /* ---------- boot ---------- */
+  if(TOKEN && OWNER){
+    validate(TOKEN).then(function(){ unlock(); }).catch(function(){ lock(); });
+  }
+})();
+</script>
+</body>
+</html>
