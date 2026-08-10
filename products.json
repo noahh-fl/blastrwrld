@@ -1,5 +1,27 @@
 [
   {
+    "name": "F1   Blaze   2.0",
+    "brand": "LKCJ",
+    "type": "Gel Blaster",
+    "link": "https://theluckylk.com/collections/gel-blaster/products/f1-blaze-gel-blaster-with-fire-control-chip?ref=kweculeh&variant=42866694193248",
+    "linkType": "other",
+    "fps": "150+",
+    "ammoCap": "~100",
+    "ammoType": "Gel Balls",
+    "price": "259.98",
+    "description": "Features:\n\nMagazine Fed\nRemovable Accessories\nSEMI/Full Auto\nLength:75 cm\nWeight:1.9 kg\nMaterials:Metal Gears,Metal Barrel and Nylon(The red parts are all metal)\nWith Fire Control Chip\nShooting Range:30m+",
+    "images": [
+      "img/9bea2e20-1828-4351-97cc-f85c7f161c93.jpg",
+      "img/e2659cf5-b3ca-4edb-8e53-5c4a86f01f8c.jpg",
+      "img/60408b2a-017e-4903-8bd4-3b57cb92a05e.jpg",
+      "img/8735c0e8-107b-487d-b1d9-26859a1cc515.jpg",
+      "img/052a9ad6-cb08-4723-847a-7fe76eb0c441.jpg",
+      "img/aa2db643-5cf0-42b5-8a7b-ac12931cb39a.jpg"
+    ],
+    "id": "b2a3a1a8-bad8-4d20-a744-375b69e6ae8a",
+    "createdAt": "2026-08-10T22:39:10.736Z"
+  },
+  {
     "name": "Fast   Mode   Pistol",
     "brand": "LKCJ",
     "type": "Gel Blaster",
