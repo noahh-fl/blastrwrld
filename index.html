@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlastrWrld — Blasters From The Videos</title>
+<meta name="description" content="Every blaster reviewed on BlastrWrld — specs, details, and where to get them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0C0E;
+    --panel:#101216;
+    --panel-2:#14161B;
+    --line:#1E2127;
+    --line-strong:#2A2E36;
+    --text:#E8EAED;
+    --sub:#C6CAD1;
+    --dim:#8B909A;
+    --faint:#5A5F68;
+    --accent:#FF5A1F;
+    --accent-soft:rgba(255,90,31,.14);
+    --blue:#3B82F6;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+    --sans:'Inter',system-ui,-apple-system,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scrollbar-color:#2A2E36 var(--bg)}
+  body{
+    background:var(--bg);color:var(--text);font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    min-height:100vh;display:flex;flex-direction:column;
+  }
+  a{color:inherit;text-decoration:none}
+  img{display:block}
+  button{font-family:inherit;cursor:pointer}
+
+  .wrap{width:100%;max-width:960px;margin:0 auto;padding:0 20px;flex:1}
+
+  /* ---------- header ---------- */
+  header{padding:52px 0 0;text-align:center}
+  .avatar{
+    width:96px;height:96px;border-radius:50%;margin:0 auto 18px;
+    border:2px solid #fff;outline:1px solid var(--line);outline-offset:4px;
+    overflow:hidden;position:relative;background:#000;
+  }
+  .avatar img{width:100%;height:100%;object-fit:cover}
+  .avatar .ph{
+    width:100%;height:100%;
+    background:linear-gradient(135deg,var(--accent) 0 49.5%,var(--blue) 50.5% 100%);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .avatar .ph span{
+    font-family:var(--mono);font-weight:600;font-size:26px;color:#0B0C0E;
+    background:#fff;border-radius:50%;width:52px;height:52px;
+    display:flex;align-items:center;justify-content:center;letter-spacing:-1px;
+  }
+  h1{font-size:26px;font-weight:800;letter-spacing:.02em}
+  .tag{
+    font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--accent);
+    text-transform:uppercase;margin-top:6px;
+  }
+  .bio{max-width:520px;margin:14px auto 0;color:var(--dim);font-size:14.5px;line-height:1.55}
+
+  .socials{display:flex;justify-content:center;gap:10px;margin-top:22px;flex-wrap:wrap}
+  .socials a{
+    display:inline-flex;align-items:center;gap:8px;
+    border:1px solid var(--line-strong);border-radius:6px;
+    padding:8px 14px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;
+    color:var(--sub);transition:border-color .18s,color .18s,background .18s;
+  }
+  .socials a:hover{border-color:var(--accent);color:#fff;background:var(--accent-soft)}
+  .socials svg{width:15px;height:15px;fill:currentColor}
+
+  /* ---------- section divider ---------- */
+  .section-head{
+    display:flex;align-items:center;gap:14px;margin:44px 0 18px;
+  }
+  .section-head::before,.section-head::after{
+    content:"";flex:1;height:1px;background:var(--line);
+  }
+  .section-head span{
+    font-family:var(--mono);font-size:11px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--dim);white-space:nowrap;
+  }
+
+  /* ---------- grid ---------- */
+  .grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+    align-items:start;padding-bottom:64px;
+  }
+  .tile{display:block;width:100%}
+  .tile{border:0;background:none;text-align:left;padding:0}
+  .tile .thumb{
+    aspect-ratio:1/1;overflow:hidden;border:1px solid var(--line);
+    border-radius:6px;background:var(--panel);position:relative;
+    transition:border-color .18s;
+  }
+  .tile .thumb img{
+    width:100%;height:100%;object-fit:cover;
+    transition:transform .25s ease,filter .25s ease;
+  }
+  .tile:hover .thumb{border-color:var(--line-strong)}
+  .tile:hover .thumb img{transform:scale(1.025);filter:brightness(1.07)}
+  .tile .thumb .noimg{
+    width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--faint);
+  }
+  .tile .caption{
+    margin-top:8px;font-size:13px;font-weight:500;color:var(--sub);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .tile .caption-sub{
+    font-family:var(--mono);font-size:10px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--faint);margin-top:3px;
+  }
+
+  .state{
+    grid-column:1/-1;text-align:center;padding:70px 0 40px;
+    font-family:var(--mono);font-size:12px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--faint);
+  }
+  .state b{color:var(--dim);font-weight:500}
+
+  /* ---------- modal ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(6,7,9,.82);
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    display:none;align-items:center;justify-content:center;z-index:50;padding:20px;
+  }
+  .overlay.open{display:flex}
+  .modal{
+    width:100%;max-width:1000px;height:min(680px,88vh);
+    background:var(--panel);border:1px solid var(--line-strong);border-radius:10px;
+    display:flex;overflow:hidden;position:relative;
+    animation:pop .22s cubic-bezier(.2,.8,.25,1);
+  }
+  @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+
+  .m-close{
+    position:absolute;top:12px;right:12px;z-index:5;
+    width:34px;height:34px;border-radius:6px;border:1px solid var(--line-strong);
+    background:rgba(11,12,14,.7);color:var(--sub);font-size:16px;line-height:1;
+    display:flex;align-items:center;justify-content:center;
+    transition:border-color .15s,color .15s;
+  }
+  .m-close:hover{border-color:var(--accent);color:#fff}
+
+  .m-imgs{
+    flex:0 0 54%;overflow-y:auto;background:#0D0E11;
+    border-right:1px solid var(--line);
+    display:flex;flex-direction:column;gap:2px;
+  }
+  .m-imgs img{width:100%;height:auto}
+  .m-imgs .noimg{
+    flex:1;display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--faint);min-height:300px;
+  }
+
+  .m-info{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+  .m-body{padding:34px 30px 20px;flex:1}
+  .m-kicker{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:10px;
+  }
+  .m-name{font-size:22px;font-weight:700;letter-spacing:.01em;padding-right:30px}
+  .m-brand{color:var(--dim);font-size:13px;margin-top:5px}
+
+  .specs{margin-top:24px;border-top:1px solid var(--line)}
+  .spec{
+    display:flex;justify-content:space-between;align-items:baseline;
+    padding:10px 2px;border-bottom:1px solid var(--line);gap:16px;
+  }
+  .spec .k{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--faint);
+  }
+  .spec .v{font-size:13.5px;font-weight:600;color:var(--sub);text-align:right}
+  .spec .v.hot{color:var(--accent)}
+
+  .m-desc{margin-top:22px;color:var(--dim);font-size:14px;line-height:1.65;white-space:pre-line}
+
+  .m-cta-wrap{
+    position:sticky;bottom:0;padding:16px 30px 22px;
+    background:linear-gradient(to top,var(--panel) 65%,transparent);
+  }
+  .m-cta{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    width:100%;padding:14px;border:0;border-radius:6px;
+    background:var(--accent);color:#0B0C0E;
+    font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:.14em;
+    text-transform:uppercase;transition:filter .15s,transform .1s;
+  }
+  .m-cta:hover{filter:brightness(1.1)}
+  .m-cta:active{transform:translateY(1px)}
+  .m-cta svg{width:13px;height:13px;fill:currentColor}
+  .m-cta-note{
+    text-align:center;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;
+    color:var(--faint);margin-top:9px;text-transform:uppercase;
+  }
+
+  /* ---------- footer ---------- */
+  footer{
+    border-top:1px solid var(--line);margin-top:auto;
+    padding:22px 20px 28px;text-align:center;
+  }
+  footer p{font-size:11.5px;color:var(--faint);line-height:1.7;max-width:640px;margin:0 auto}
+  footer .foot-brand{
+    font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--dim);margin-top:10px;
+  }
+
+  ::-webkit-scrollbar{width:9px;height:9px}
+  ::-webkit-scrollbar-thumb{background:#2A2E36;border-radius:9px;border:2px solid var(--bg)}
+  ::-webkit-scrollbar-track{background:transparent}
+
+  /* ---------- mobile ---------- */
+  @media (max-width:720px){
+    header{padding-top:38px}
+    .grid{grid-template-columns:repeat(2,1fr);gap:11px}
+    .overlay{padding:0}
+    .modal{flex-direction:column;height:100%;max-width:none;border-radius:0;border:0}
+    .m-imgs{flex:0 0 44%;border-right:0;border-bottom:1px solid var(--line)}
+    .m-body{padding:24px 20px 12px}
+    .m-cta-wrap{padding:12px 20px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="avatar" id="avatar">
+      <div class="ph"><span>BW</span></div>
+    </div>
+    <h1>BlastrWrld</h1>
+    <div class="tag">Blaster Reviews // Field Tested</div>
+    <p class="bio">Every blaster you've seen on the channel — dart, gel, and everything in between. Reviewed on video, listed here with full specs and links to grab your own.</p>
+    <div class="socials">
+      <a href="https://www.tiktok.com/@blastrwrld" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+        TikTok
+      </a>
+      <a href="https://www.youtube.com/@blastrwrld" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>
+        YouTube
+      </a>
+      <a href="https://www.facebook.com/blastrwrld" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.09 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.7 4.53-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.95.93-1.95 1.89v2.26h3.32l-.53 3.49h-2.79V24C19.61 23.09 24 18.1 24 12.07z"/></svg>
+        Facebook
+      </a>
+    </div>
+  </header>
+
+  <div class="section-head"><span>The Arsenal</span></div>
+
+  <div class="grid" id="grid">
+    <div class="state" id="state">Loading arsenal…</div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="m-close" id="mClose" aria-label="Close">✕</button>
+    <div class="m-imgs" id="mImgs"></div>
+    <div class="m-info">
+      <div class="m-body">
+        <div class="m-kicker" id="mKicker"></div>
+        <div class="m-name" id="mName"></div>
+        <div class="m-brand" id="mBrand"></div>
+        <div class="specs" id="mSpecs"></div>
+        <div class="m-desc" id="mDesc"></div>
+      </div>
+      <div class="m-cta-wrap">
+        <a id="mCta" target="_blank" rel="sponsored noopener">
+          <button class="m-cta"><span id="mCtaLabel">Get This Blaster</span>
+            <svg viewBox="0 0 24 24"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h5v2H7v10h10v-3h2v5H5V5z"/></svg>
+          </button>
+        </a>
+        <div class="m-cta-note">Opens the product page in a new tab</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>Some links on this site are affiliate links — if you buy through them, BlastrWrld may earn a commission at no extra cost to you. As an Amazon Associate, I earn from qualifying purchases.</p>
+  <div class="foot-brand">© BlastrWrld</div>
+</footer>
+
+<script>
+(function(){
+  var grid = document.getElementById('grid');
+  var state = document.getElementById('state');
+  var overlay = document.getElementById('overlay');
+  var products = [];
+
+  function imgSrc(ref){
+    if(!ref) return null;
+    return ref;
+  }
+
+  function esc(s){
+    var d = document.createElement('div');
+    d.textContent = s == null ? '' : String(s);
+    return d.innerHTML;
+  }
+
+  function render(){
+    grid.innerHTML = '';
+    if(!products.length){
+      grid.innerHTML = '<div class="state"><b>Products incoming</b><br><br>First drops landing soon — check back after the next video.</div>';
+      return;
+    }
+    products.forEach(function(p, i){
+      var btn = document.createElement('button');
+      btn.className = 'tile';
+      var cover = p.images && p.images.length ? imgSrc(p.images[0]) : null;
+      btn.innerHTML =
+        '<div class="thumb">' +
+          (cover ? '<img loading="lazy" src="'+esc(cover)+'" alt="'+esc(p.name)+'">' : '<div class="noimg">NO VISUAL</div>') +
+        '</div>' +
+        '<div class="caption">'+esc(p.name)+'</div>' +
+        (p.type ? '<div class="caption-sub">'+esc(p.type)+'</div>' : '');
+      btn.addEventListener('click', function(){ open(i); });
+      grid.appendChild(btn);
+    });
+  }
+
+  function specRow(k, v, hot){
+    return v ? '<div class="spec"><span class="k">'+k+'</span><span class="v'+(hot?' hot':'')+'">'+esc(v)+'</span></div>' : '';
+  }
+
+  function open(i){
+    var p = products[i];
+    var imgs = document.getElementById('mImgs');
+    imgs.innerHTML = '';
+    if(p.images && p.images.length){
+      p.images.forEach(function(ref){
+        var im = document.createElement('img');
+        im.src = imgSrc(ref);
+        im.alt = p.name;
+        imgs.appendChild(im);
+      });
+    } else {
+      imgs.innerHTML = '<div class="noimg">NO VISUAL</div>';
+    }
+    document.getElementById('mKicker').textContent = p.type || 'Blaster';
+    document.getElementById('mName').textContent = p.name || '';
+    document.getElementById('mBrand').textContent = p.brand || '';
+    document.getElementById('mSpecs').innerHTML =
+      specRow('FPS', p.fps, true) +
+      specRow('Ammo Capacity', p.ammoCap) +
+      specRow('Ammo Type', p.ammoType) +
+      specRow('Power', p.power) +
+      specRow('Price', p.price);
+    document.getElementById('mDesc').textContent = p.description || '';
+    var cta = document.getElementById('mCta');
+    cta.href = p.link || '#';
+    var label = 'Get This Blaster';
+    if(p.linkType === 'amazon') label = 'View on Amazon';
+    else if(p.linkType === 'brand') label = 'Buy From ' + (p.brand || 'The Brand');
+    document.getElementById('mCtaLabel').textContent = label;
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    imgs.scrollTop = 0;
+    document.querySelector('.m-info').scrollTop = 0;
+  }
+
+  function close(){
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('mClose').addEventListener('click', close);
+  overlay.addEventListener('click', function(e){ if(e.target === overlay) close(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close(); });
+
+  fetch('products.json?v=' + Date.now())
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      products = Array.isArray(data) ? data : [];
+      render();
+    })
+    .catch(function(){
+      state.innerHTML = 'Could not load products — refresh to retry.';
+    });
+})();
+</script>
+</body>
+</html>
